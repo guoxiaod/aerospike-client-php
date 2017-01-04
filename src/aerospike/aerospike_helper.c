@@ -199,14 +199,14 @@ aerospike_helper_set_error(zend_class_entry *ce_p, zval *object_p TSRMLS_DC)
             new_le.u1.v.type = val_persist;                                    \
             if (new_flag) {                                                    \
                 pthread_rwlock_wrlock(&AEROSPIKE_G(aerospike_mutex));          \
-                    zend_hash_add(persistent_list, zend_string_init(alias,     \
-                            strlen(alias), 0), &new_le);                       \
+                    zend_hash_str_add(persistent_list,                         \
+                        alias, alias_len, &new_le);                            \
                     ((aerospike_ref *) new_le.value.ptr)->ref_hosts_entry++;   \
                 pthread_rwlock_unlock(&AEROSPIKE_G(aerospike_mutex));          \
             } else {                                                           \
                 pthread_rwlock_wrlock(&AEROSPIKE_G(aerospike_mutex));          \
-                    zend_hash_update(persistent_list, zend_string_init(alias,  \
-                             strlen(alias), 0),  &new_le);                     \
+                    zend_hash_str_update(persistent_list,                      \
+                        alias, alias_len, &new_le);                            \
                     ((aerospike_ref *) new_le.value.ptr)->ref_hosts_entry++;   \
                 pthread_rwlock_unlock(&AEROSPIKE_G(aerospike_mutex));          \
             }                                                                  \
@@ -317,7 +317,7 @@ set_shm_key_from_alias_hash_or_generate(as_config* conf,
 		zend_hash_add(shm_key_list, alias_to_search, strlen(alias_to_search),
 			(void *) &new_shm_entry, sizeof(zend_rsrc_list_entry*), NULL);
 #else
-		zend_hash_add(shm_key_list, zend_string_init(alias_to_search, strlen(alias_to_search), 0),
+		zend_hash_str_add(shm_key_list, alias_to_search, strlen(alias_to_search),
 			 &new_shm_entry);
 #endif
 		pthread_rwlock_unlock(&AEROSPIKE_G(aerospike_mutex));
@@ -364,8 +364,8 @@ set_shm_key_from_alias_hash_or_generate(as_config* conf,
 		rsrc_result = zend_register_resource(shm_key_ptr, 1);
 		new_shm_entry.value.ptr = shm_key_ptr;
 		new_shm_entry.u1.v.type = 1;
-		zend_hash_add(shm_key_list,                                    
-			zend_string_init(alias_to_search, strlen(alias_to_search), 0),  &new_shm_entry);
+		zend_hash_str_add(shm_key_list,                                    
+			alias_to_search, strlen(alias_to_search),  &new_shm_entry);
 #endif
 
 	}
@@ -513,7 +513,7 @@ aerospike_helper_object_from_alias_hash(Aerospike_object* as_object_p,
 		strlen(alias_to_hash), (void *) &new_le, sizeof(zend_rsrc_list_entry), NULL);
 		((aerospike_ref *) new_le.ptr)->ref_hosts_entry++;
 #else
-		zend_hash_add(persistent_list, zend_string_init(alias_to_hash, strlen(alias_to_hash), 0),
+		zend_hash_str_add(persistent_list, alias_to_hash, strlen(alias_to_hash),
 				&new_le);
 		((aerospike_ref *) new_le.value.ptr)->ref_hosts_entry++;
 #endif

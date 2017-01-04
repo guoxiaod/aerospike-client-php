@@ -1503,7 +1503,7 @@ check_val_type_list(
 	******************************************************************************************************
 	*/
 #define AEROSPIKE_ZEND_HASH_ADD(ht, key, len, data, data_size, dest, flag, z_val) \
-		zend_hash_add_new(ht, zend_string_init(key, strlen(key), 0), z_val)
+		zend_hash_str_add_new(ht, key, len, z_val)
 
 	/*
 	******************************************************************************************************
